@@ -1,3 +1,4 @@
+import uuid
 import strawberry
 import typing
 from models.user import users
@@ -5,7 +6,7 @@ from models.user import users
 
 @strawberry.type
 class User:
-    id: int
+    id: str
     name: str
     email: str
 
@@ -25,7 +26,8 @@ class Queries:
 class Mutations:
     @strawberry.mutation
     def create_user(self, info, name: str, email: str) -> User:
-        user = User(name=name, email=email)
+        unique_id = str(uuid.uuid4())
+        user = User(id=unique_id, name=name, email=email)
         users.insert_one(user)
         return user
 
